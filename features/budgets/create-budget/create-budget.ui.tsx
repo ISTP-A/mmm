@@ -46,7 +46,7 @@ export function CreateBudgetForm() {
 
     const createMutation = useCreateBudgetMutation({
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: BUDGETS_ROOT_QUERY_KEY })
+            queryClient.invalidateQueries({ queryKey: [...BUDGETS_ROOT_QUERY_KEY, 'list', {}] })
             queryClient.invalidateQueries({ queryKey: [...BUDGETS_ROOT_QUERY_KEY, 'statistics'] })
             toast('성공적으로 등록되었습니다')
             router.replace('/budgets')

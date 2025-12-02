@@ -2,13 +2,30 @@ import { UniqueId } from "@/global"
 import { api } from "./api.instance"
 import { responseContract } from "./api.lib"
 import { BudgetDtoSchema, BudgetsDtoSchema, BudgetStatisticsDtoSchema, CreateBudgetDtoSchema, UpdateBudgetDtoSchema } from "./api.contracts"
-import { CreateBudgetDto, UpdateBudgetDto } from "./api.types"
+import { CreateBudgetDto, PaymentTypeDto, SpendTypeDto, UpdateBudgetDto } from "./api.types"
 import { AxiosRequestConfig } from "axios"
 
 
 // Budgets
-export function getBudgets() {
-    return api.get('/budgets').then(responseContract(BudgetsDtoSchema))
+
+
+export interface BudgetFilters {
+    spendType?: SpendTypeDto[]
+    paymentType?: PaymentTypeDto[]
+    sort?: string
+}
+
+
+export function getBudgets(filters: BudgetFilters = {}) {
+    const params = new URLSearchParams()
+
+    filters.spendType?.forEach(v => params.append("spendType", v))
+    filters.paymentType?.forEach(v => params.append("paymentType", v))
+    if (filters.sort) params.set('sort', filters.sort)
+
+    const query = params.toString()
+    const url = query ? `/budgets?${query}` : "/budgets"
+    return api.get(url).then(responseContract(BudgetsDtoSchema))
 }
 
 export function getBudgetById(id: UniqueId) {

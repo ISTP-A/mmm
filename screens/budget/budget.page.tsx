@@ -2,17 +2,17 @@
 
 import { BudgetList } from "@/widgets/budget-list/budget-list.ui"
 import { BudgetStat } from "@/features/budgets/budget-stat/budget-stat.ui"
-import { BudgetFilter } from "@/features/budgets/budget-filter/budget-filter.ui"
+import { BudgetSort } from "@/features/budgets/budget-filter/budget-filter.ui"
 import { Button } from "@/shared/ui/button"
 import { Plus } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 export function BudgetsRenderPage() {
     return (
-        <div>
+        <div className="w-full min-h-screen flex flex-col">
             <Controller />
             <BudgetStat />
-            <BudgetFilter />
+            <BudgetSort />
             <BudgetList />
         </div>
     )

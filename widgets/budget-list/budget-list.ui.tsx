@@ -7,9 +7,11 @@ import { getPaymentCurrency, getPaymentTypeLabel } from "@/entities/payment/paym
 import { UniqueId } from "@/global"
 import { cn } from "@/shared/lib/utils"
 import { useSuspenseQuery } from "@tanstack/react-query"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { ReactNode, Suspense } from "react"
 import { BudgetListSkeleton } from "./budget-list.skeleton"
+import { BudgetFilters } from "@/shared/api/api.service"
+import { PaymentTypeDto, SpendTypeDto } from "@/shared/api/api.types"
 
 export function BudgetList() {
     return (
@@ -21,13 +23,25 @@ export function BudgetList() {
 
 export function BaseBudgetList() {
     const navigate = useRouter()
-    const { data: budgets } = useSuspenseQuery(budgetsQueryOptions())
-    const onClick = (id: UniqueId) => () => navigate.push(`/budgets/${id}`)
-    return (
-        <div className="px-4">
-            {budgets.count === 0 && <div>no list</div>}
+    const searchParams = useSearchParams()
 
-            {budgets.budgets.map((budget) => {
+    const filters: BudgetFilters = {
+        spendType: searchParams.getAll("spendType") as SpendTypeDto[],
+        paymentType: searchParams.getAll("paymentType") as PaymentTypeDto[],
+        sort: searchParams.get('sort') as string
+    }
+
+    const { data: budgets } = useSuspenseQuery(budgetsQueryOptions(filters))
+
+    const onClick = (id: UniqueId) => () => navigate.push(`/budgets/${id}`)
+
+    return (
+        <div className="flex-1 px-4 flex flex-col">
+            {budgets.count === 0 && (
+                <div className="w-full flex-1 flex items-center justify-center">no list</div>
+            )}
+
+            {budgets.budgets.map(budget => {
                 return (
                     <div key={budget.id} onClick={onClick(budget.id)}>
                         <BudgetMeta budget={budget} />

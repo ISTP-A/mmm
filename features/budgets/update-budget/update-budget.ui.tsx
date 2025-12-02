@@ -49,7 +49,7 @@ export function UpdateBudgetForm({ budget }: { budget: Budget }) {
 
     const updateMutation = useUpdateBudgetMutation({
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: BUDGETS_ROOT_QUERY_KEY })
+            queryClient.invalidateQueries({ queryKey: [...BUDGETS_ROOT_QUERY_KEY, 'list', {}] })
             queryClient.invalidateQueries({ queryKey: [...BUDGETS_ROOT_QUERY_KEY, 'statistics'] })
             toast('성공적으로 수정되었습니다')
             router.replace('/budgets')
@@ -62,7 +62,7 @@ export function UpdateBudgetForm({ budget }: { budget: Budget }) {
 
     const deleteMutation = useDeleteBudgetMutation({
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: BUDGETS_ROOT_QUERY_KEY })
+            queryClient.invalidateQueries({ queryKey: [...BUDGETS_ROOT_QUERY_KEY, 'list', {}] })
             queryClient.invalidateQueries({ queryKey: [...BUDGETS_ROOT_QUERY_KEY, 'statistics'] })
             toast('성공적으로 삭제되었습니다')
             router.replace('/budgets')
